@@ -183,14 +183,14 @@ class Reversi:
         score = 0
 
         weights = [
-            [100, -20, 10, 5, 5, 10, -20, 100],
+            [150, -20, 10, 5, 5, 10, -20, 150],
             [-20, -50, -2, -2, -2, -2, -50, -20],
             [10, -2, -1, -1, -1, -1, -2, 10],
-            [5, -2, -1, -1, -1, -1, -2, 5],
-            [5, -2, -1, -1, -1, -1, -2, 5],
+            [5, -2, -1, 0, 0, -1, -2, 5],
+            [5, -2, -1, 0, 0, -1, -2, 5],
             [10, -2, -1, -1, -1, -1, -2, 10],
             [-20, -50, -2, -2, -2, -2, -50, -20],
-            [100, -20, 10, 5, 5, 10, -20, 100],
+            [150, -20, 10, 5, 5, 10, -20, 150],
         ]
 
         for y in range(self.M):
@@ -238,8 +238,8 @@ class Reversi:
         return current_depth - 1
 
     def alpha_beta_helper(self, depth, alpha, beta, current_player, perspective_player, time_limit, time_start):
-        if time() - time_start > time_limit - 0.1:
-            return self.evaluate(perspective_player)
+        # if time() - time_start > time_limit - 0.1:
+        #     return self.evaluate(perspective_player)
 
         key = (self.hash_board(), current_player, depth)
 
@@ -284,13 +284,13 @@ class Reversi:
             self.transposition_table[key] = value
             return value
 
-    def alpha_beta_search(self, player, max_depth=9, time_limit=0.5, time_start=None):
+    def alpha_beta_search(self, player, max_depth=11, time_limit=3, time_start=None):
         best_score = float('-inf')
         best_move = (-1, -1)
 
         for move in self.moves(player):
-            if time() - time_start > time_limit - 0.1:
-                break
+            # if time() - time_start > time_limit - 0.1:
+            #     break
             self.do_move(move, player)
             score = self.alpha_beta_helper(max_depth - 1, float('-inf'), float('inf'), 1 - player, player, time_limit, time_start)
             self.undo_move()

@@ -4,11 +4,12 @@ from Box2D import b2World, b2Vec2
 from typing import override, Tuple
 
 from Collidable import Collidable
-from constants import PPM, SCREEN_HEIGHT
+from constants import PPM, SCREEN_HEIGHT, SCREEN_HEIGHT_METERS
 
 
 class Bullet(Collidable):
-    def __init__(self, world: b2World, x: int, y: int, angle_deg: int, speed: int):
+    def __init__(self, world: b2World, x = 5, y= SCREEN_HEIGHT_METERS//2, angle_deg = 0, speed = 50,
+                 state = None, action = None):
         self.body = world.CreateDynamicBody(position=(x, y), bullet=True)
         self.body.CreatePolygonFixture(box=(0.1, 0.1), density=1, friction=100)
 
@@ -19,6 +20,9 @@ class Bullet(Collidable):
 
         self.width = 1
         self.height = 1
+
+        self.state = state
+        self.action = action
 
     @override
     def get_position(self) -> Tuple[int, int, int, int]:

@@ -41,7 +41,7 @@ r = time_consuming_function(500_000)
 TIME_MULTIPLIER = (time.time() - t0) / 0.425
 
 CONFIG = {
-   'reversi': {'ready_timeout': 15, 'move_timeout': 15, 'game_timeout': 200},
+   'reversi': {'ready_timeout': 5, 'move_timeout': 5, 'game_timeout': 60},
    'jungle': {'ready_timeout': 5, 'move_timeout': 5, 'game_timeout': 60}, 
    'chess': {'ready_timeout': 5, 'move_timeout': 5, 'game_timeout': 60}
 }

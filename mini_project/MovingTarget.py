@@ -6,12 +6,12 @@ from Collidable import Collidable
 from constants import PPM, SCREEN_HEIGHT
 
 class MovingTarget(Collidable):
-    def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=300):
+    def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=500):
         self.wx = wx_px
         self.wy = wy_px
         self.width = width_px
         self.height = height_px
-        self.speed = speed_px / PPM  # convert to meters per step
+        self.speed = speed_px / PPM
 
         # Convert pixels to meters
         init_x = (wx_px / 2) / PPM

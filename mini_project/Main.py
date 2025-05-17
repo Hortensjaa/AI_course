@@ -1,17 +1,17 @@
 from time import time
 
+import numpy as np
 import pygame
 from Box2D import b2World
 from Bullet import Bullet
 from constants import SCREEN_HEIGHT, PPM, SCREEN_WIDTH, TARGET_FPS, TIME_STEP, GRAVITY
-from Agent import Agent
 from MovingTarget import MovingTarget
 from Timer import Timer
-
+from QLearningAgent import QLearningAgent
 
 class Game:
-    RESET_TIME = 10
-    SHOT_COOLDOWN = 0.01
+    COUNTER_RESET_INTERVAL = 10
+    SHOT_COOLDOWN = 0.001
 
     def __init__(self):
         pygame.init()
@@ -20,14 +20,14 @@ class Game:
         self.running = True
 
         self.world = b2World(gravity=(0, GRAVITY), doSleep=True)
-        self.agent = Agent(self.world)
+        self.agent = QLearningAgent(self.world)
         self.target = MovingTarget(self.world, SCREEN_WIDTH, SCREEN_HEIGHT)
         self.bullets: list[Bullet] = []
 
         self.history = []
 
         self.shot_timer = Timer(self.SHOT_COOLDOWN)
-        self.reset_timer = Timer(self.RESET_TIME)
+        self.reset_timer = Timer(self.COUNTER_RESET_INTERVAL)
 
         self.success_counter = 0
         self.miss_counter = 0
@@ -56,7 +56,7 @@ class Game:
         self.target.update()
 
         if self.shot_timer.ready():
-            bullet = self.agent.create_bullet()
+            bullet = self.agent.create_bullet((self.target.body.position.x, self.target.direction))
             self.bullets.append(bullet)
             self.shot_timer.reset()
 
@@ -64,17 +64,17 @@ class Game:
 
         for bullet in self.bullets[:]:
             bullet.draw(self.screen)
-            x, y = bullet.body.position
+            bullet_x, bullet_y = bullet.body.position
+            target_x, _ = self.target.body.position
 
             if self.target.are_colliding(bullet):
                 self._destroy_bullet(bullet)
                 self.success_counter += 1
-            elif (
-                x * PPM < 0 or x * PPM > SCREEN_WIDTH
-                or y * PPM < 0 or y * PPM > SCREEN_HEIGHT
-            ):
+                self.agent.update_knowledge(bullet.state, bullet.action, 0)
+            elif bullet_x * PPM < 0 or bullet_x * PPM > SCREEN_WIDTH:
                 self._destroy_bullet(bullet)
                 self.miss_counter += 1
+                self.agent.update_knowledge(bullet.state, bullet.action, abs(target_x - bullet_x))
 
         if self.reset_timer.ready():
             self.history.append((self.success_counter, self.miss_counter))
@@ -106,7 +106,7 @@ class Game:
         self.screen.blit(text_surface, (10, 10))
 
     def _draw_reset_timer(self):
-        time_left = max(0, self.RESET_TIME - (time() - self.reset_timer.last_time))
+        time_left = max(0, self.COUNTER_RESET_INTERVAL - (time() - self.reset_timer.last_time))
         timer_text = f"Reset in: {int(time_left)}s"
         font = pygame.font.SysFont("Arial", 18)
         text_surface = font.render(timer_text, True, (200, 200, 0))
@@ -124,11 +124,13 @@ class Game:
         all_hits = 0
         all_misses = 0
         for i, (hits, misses) in enumerate(self.history):
+            if 1 % 100 == 0:
+                print("-------------------")
             all_hits += hits
             all_misses += misses
             total = hits + misses
             success_rate = (hits / total * 100) if total > 0 else 0
-            print(f"{i + 1}. Hits: {hits}, Misses: {misses}, Success rate: {success_rate:.1f}%")
+            print(f"{i + 1}. Hits: {hits}, Misses: {misses}, Success rate: {success_rate:.1f}% {"<- PASSED" if success_rate > 90 else ""}")
         print("-----Total-----")
         total = all_hits + all_misses
         success_rate = (all_hits / total * 100) if total > 0 else 0
