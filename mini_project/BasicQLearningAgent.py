@@ -1,5 +1,5 @@
 from collections import defaultdict
-from random import random, randint, choice
+from random import random, randint
 from typing import override
 
 import numpy as np
@@ -8,14 +8,13 @@ import numpy as np
 from mini_project.Agent import Agent
 from mini_project.Bullet import Bullet
 from constants import SCREEN_WIDTH, PPM
-from mini_project.constants import SCREEN_WIDTH_METERS
 
 
-class QLearningAgent(Agent):
+class BasicQLearningAgent(Agent):
     EPSILON_MIN = 0.01
-    EPSILON_DECAY = 0.995
+    EPSILON_DECAY = 0.999
 
-    def __init__(self, world, alpha=0.1, gamma=0.99, epsilon=1):
+    def __init__(self, world, alpha=0.2, gamma=0.99, epsilon=1):
         super().__init__(world)
         self.q = defaultdict(lambda: np.zeros(self.N_ACTIONS))
         self.alpha = alpha
@@ -31,9 +30,6 @@ class QLearningAgent(Agent):
 
     def update_knowledge(self, state, action, distance):
         reward = 1 / (1 + distance**2)
-        # reward = 1 if distance == 0 else -distance/SCREEN_WIDTH
-        # reward = 1 if distance == 0 else -1
-        # reward = np.exp(-0.05 * distance)
         self.epsilon = max(self.EPSILON_MIN, self.epsilon * self.EPSILON_DECAY)
         self.q[state][action] += reward
         self.q[state][action] += self.alpha * (reward - self.q[state][action])

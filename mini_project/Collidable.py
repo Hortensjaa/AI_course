@@ -7,7 +7,7 @@ import pygame
 class Collidable(ABC):
 
     @abstractmethod
-    def get_position(self) -> Tuple[int, int, int, int]:
+    def get_position(self)  -> Tuple[float, float, float, float]:
         """
         Returns the position of the collidable object.
         The position is represented as a tuple (x, y, width, height).

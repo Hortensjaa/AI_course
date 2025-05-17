@@ -7,8 +7,8 @@ from Bullet import Bullet
 
 
 class Agent(ABC):
-    N_ACTIONS = 5
-    ANGLES = np.linspace(-60, 85, N_ACTIONS)
+    N_ACTIONS = 7
+    ANGLES = np.linspace(-60, 60, N_ACTIONS)
     POS_X = 5
     POS_Y = SCREEN_HEIGHT_METERS//2
     BULLET_SPEED = 50

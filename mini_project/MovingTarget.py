@@ -13,7 +13,6 @@ class MovingTarget(Collidable):
         self.height = height_px
         self.speed = speed_px / PPM
 
-        # Convert pixels to meters
         init_x = (wx_px / 2) / PPM
         init_y = (SCREEN_HEIGHT - height_px) / PPM
 
@@ -34,10 +33,10 @@ class MovingTarget(Collidable):
         self.body.linearVelocity = b2Vec2(self.direction * self.speed, 0)
 
     @override
-    def get_position(self) -> Tuple[int, int, int, int]:
+    def get_position(self) -> Tuple[float, float, float, float]:
         pos = self.body.position
-        x_px = int(pos.x * PPM)
-        y_px = int(pos.y * PPM)
+        x_px = pos.x * PPM
+        y_px = pos.y * PPM
         return x_px, y_px, self.width, self.height
 
     def draw(self, screen: pygame.display) -> None:

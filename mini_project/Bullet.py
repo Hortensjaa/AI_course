@@ -25,11 +25,11 @@ class Bullet(Collidable):
         self.action = action
 
     @override
-    def get_position(self) -> Tuple[int, int, int, int]:
+    def get_position(self) -> Tuple[float, float, float, float]:
         x, y = self.body.position
-        px = int(x * PPM)
-        py = SCREEN_HEIGHT - int(y * PPM)
-        return px, py, int(self.width * PPM), int(self.height * PPM)
+        px = x * PPM
+        py = SCREEN_HEIGHT - y * PPM
+        return px, py, self.width * PPM, self.height * PPM
 
     @override
     def draw(self, screen: pygame.display) -> None:

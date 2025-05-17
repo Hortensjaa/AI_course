@@ -1,17 +1,16 @@
 from time import time
 
-import numpy as np
 import pygame
 from Box2D import b2World
 from Bullet import Bullet
 from constants import SCREEN_HEIGHT, PPM, SCREEN_WIDTH, TARGET_FPS, TIME_STEP, GRAVITY
 from MovingTarget import MovingTarget
 from Timer import Timer
-from QLearningAgent import QLearningAgent
+from BasicQLearningAgent import BasicQLearningAgent
 
 class Game:
     COUNTER_RESET_INTERVAL = 10
-    SHOT_COOLDOWN = 0.001
+    SHOT_COOLDOWN = 0.01
 
     def __init__(self):
         pygame.init()
@@ -20,7 +19,7 @@ class Game:
         self.running = True
 
         self.world = b2World(gravity=(0, GRAVITY), doSleep=True)
-        self.agent = QLearningAgent(self.world)
+        self.agent = BasicQLearningAgent(self.world)
         self.target = MovingTarget(self.world, SCREEN_WIDTH, SCREEN_HEIGHT)
         self.bullets: list[Bullet] = []
 
