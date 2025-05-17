@@ -1,8 +1,8 @@
 from random import choice
 from typing import override
 
-from Bullet import Bullet
-from mini_project.Agent import Agent
+from mini_project.Bullet import Bullet
+from mini_project.agents.Agent import Agent
 
 
 class RandomAgent(Agent):

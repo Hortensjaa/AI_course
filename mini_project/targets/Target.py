@@ -2,10 +2,10 @@ from typing import override, Tuple
 
 import pygame
 from Box2D import b2World, b2Vec2
-from Collidable import Collidable
-from constants import PPM, SCREEN_HEIGHT
+from mini_project.Collidable import Collidable
+from mini_project.constants import PPM, SCREEN_HEIGHT
 
-class MovingTarget(Collidable):
+class Target(Collidable):
     def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=500):
         self.wx = wx_px
         self.wy = wy_px
@@ -24,13 +24,7 @@ class MovingTarget(Collidable):
         self.direction = 1
 
     def update(self):
-        x_px = self.body.position.x * PPM
-        if x_px <= 150:
-            self.direction = 1
-        elif x_px + self.width >= self.wx:
-            self.direction = -1
-
-        self.body.linearVelocity = b2Vec2(self.direction * self.speed, 0)
+        pass
 
     @override
     def get_position(self) -> Tuple[float, float, float, float]:

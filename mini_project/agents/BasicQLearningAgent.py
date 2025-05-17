@@ -5,9 +5,9 @@ from typing import override
 import numpy as np
 
 
-from mini_project.Agent import Agent
+from mini_project.agents.Agent import Agent
 from mini_project.Bullet import Bullet
-from constants import SCREEN_WIDTH, PPM
+from mini_project.constants import SCREEN_WIDTH, PPM
 
 
 class BasicQLearningAgent(Agent):

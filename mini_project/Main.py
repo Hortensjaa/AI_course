@@ -4,9 +4,9 @@ import pygame
 from Box2D import b2World
 from Bullet import Bullet
 from constants import SCREEN_HEIGHT, PPM, SCREEN_WIDTH, TARGET_FPS, TIME_STEP, GRAVITY
-from MovingTarget import MovingTarget
+from mini_project.targets.MovingTarget import MovingTarget
 from Timer import Timer
-from BasicQLearningAgent import BasicQLearningAgent
+from mini_project.agents.BasicQLearningAgent import BasicQLearningAgent
 
 class Game:
     COUNTER_RESET_INTERVAL = 10

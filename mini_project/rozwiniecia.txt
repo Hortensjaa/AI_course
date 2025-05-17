@@ -1,3 +1,0 @@
-1. Granie z użytkownikiem irl
-2. Logika cooldownu, w której można spasować strzał, żeby mieć mniej missów (istnieją wtedy nietrafialne pozycje)
-3. Platforma czasem zmieniająca randomowo kierunek

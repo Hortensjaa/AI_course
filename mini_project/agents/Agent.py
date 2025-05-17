@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from constants import SCREEN_HEIGHT_METERS
-from Bullet import Bullet
+from mini_project.constants import SCREEN_HEIGHT_METERS
+from mini_project.Bullet import Bullet
 
 
 class Agent(ABC):
