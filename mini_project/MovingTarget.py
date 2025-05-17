@@ -6,7 +6,7 @@ from Collidable import Collidable
 from constants import PPM, SCREEN_HEIGHT
 
 class MovingTarget(Collidable):
-    def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=500):
+    def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=300):
         self.wx = wx_px
         self.wy = wy_px
         self.width = width_px
@@ -25,9 +25,8 @@ class MovingTarget(Collidable):
         self.direction = 1
 
     def update(self):
-        # Get position in pixels
         x_px = self.body.position.x * PPM
-        if x_px <= 0:
+        if x_px <= 150:
             self.direction = 1
         elif x_px + self.width >= self.wx:
             self.direction = -1

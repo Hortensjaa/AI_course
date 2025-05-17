@@ -8,8 +8,8 @@ from constants import SCREEN_HEIGHT_METERS
 
 
 class Agent:
-    N_ACTIONS = 20
-    ANGLES = np.linspace(-45, 85, N_ACTIONS)
+    N_ACTIONS = 10
+    ANGLES = np.linspace(-60, 85, N_ACTIONS)
 
     def __init__(self, world, alpha=0.1, gamma=0.99, epsilon=0.1):
         self.q = defaultdict(lambda: np.zeros(self.N_ACTIONS))
@@ -31,5 +31,5 @@ class Agent:
     def create_bullet(self) -> Bullet:
         # -- for tests
         deg = choice(self.ANGLES)
-        return Bullet(self.world, x=5, y=SCREEN_HEIGHT_METERS//2, angle_deg=int(deg), speed=40)
+        return Bullet(self.world, x=5, y=SCREEN_HEIGHT_METERS//2, angle_deg=int(deg), speed=50)
         # ------------
