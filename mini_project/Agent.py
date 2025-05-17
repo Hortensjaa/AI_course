@@ -7,7 +7,7 @@ from Bullet import Bullet
 
 
 class Agent(ABC):
-    N_ACTIONS = 7
+    N_ACTIONS = 11
     ANGLES = np.linspace(-60, 60, N_ACTIONS)
     POS_X = 5
     POS_Y = SCREEN_HEIGHT_METERS//2
