@@ -12,8 +12,8 @@ from mini_project.constants import SCREEN_WIDTH, PPM
 
 
 class AgentWithCooldown(Agent):
-    EPSILON_MIN = 0.01
-    EPSILON_DECAY = 0.999
+    EPSILON_MIN = 0.001
+    EPSILON_DECAY = 0.995
     COOLDOWN = 10  # number of cooldown in ticks
 
     def __init__(self, world, alpha=0.1, gamma=0.99, epsilon=1):
@@ -38,7 +38,8 @@ class AgentWithCooldown(Agent):
         elif distance > 0:  # miss
             reward = 1 / (100 + distance**2)
         else:
-            reward = 0.01  # little reward for waiting - better than missing!
+            # little reward for waiting - better than missing, but punish on waiting too long!
+            reward = 1 / (10 * max(self.time_since_last_shot, 10))
         self.epsilon = max(self.EPSILON_MIN, self.epsilon * self.EPSILON_DECAY)
         self.q[state][action] += self.alpha * (reward - self.q[state][action])
 

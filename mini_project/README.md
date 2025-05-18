@@ -42,15 +42,42 @@ $$
 
 ---
 
-## 🧠 Q-Learning Parameters
+### 🧠 Q-Learning Parameters
 
-| Parameter     | Value           | Description                                  |
-|---------------|-----------------|----------------------------------------------|
-| α (alpha)     | 0.1             | Learning rate                                |
-| γ (gamma)     | 0.99            | Discount factor for future rewards           |
-| ε (epsilon)   | 1.0 → 0.01      | Exploration vs exploitation (decaying)       |
-| bin size      | 25 px           | State granularity (target X-position)        |
-| reward        | $1 / (1 + d^2)$ | The closer the hit, the higher the reward |
+| Parameter   | Value          | Description                               |
+|-------------|----------------|-------------------------------------------|
+| α (alpha)   | 0.1            | Learning rate                             |
+| γ (gamma)   | 0.99           | Discount factor for future rewards        |
+| ε (epsilon) | 1.0 → 0.01     | Exploration vs exploitation (decaying)    |
+| ε decay     | 0.999          | Slow decay                                |
+| bin size    | 25 px          | State granularity (target X-position)     |
+| reward      | $1 / (1 + d^2)$ | The closer the hit, the higher the reward |
+
+---
+
+## QLearning Agent With Cooldown
+- Similar to basic Q-learning agent, but with an additional constraint: the agent can only shoot every $t$ ticks of waiting.
+### 🔁 Q-Update Scheme:
+> This version also uses simplified approach - agent has state now, but it doesn't matter in formula (I guess).
+
+$$
+Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} - Q[s][a])
+$$
+
+---
+
+### 🧠 Q-Learning Parameters
+
+| Parameter          | Value                                          | Description                                                        |
+|--------------------|------------------------------------------------|--------------------------------------------------------------------|
+| α (alpha)          | 0.1                                            | Learning rate                                                      |
+| γ (gamma)          | 0.99                                           | Discount factor for future rewards                                 |
+| ε (epsilon)        | 1.0 → 0.001                                    | Exploration vs exploitation (decaying); smaller than for basic one |
+| ε decay            | 0.995                                          | Faster decay                   |
+| bin size           | 25 px                                          | State granularity (target X-position)                              |
+| reward on hit      | $1$                                            | Big reward for hit                                                 |
+| reward on miss     | $1 / (100 + d^2)$                              | The closer the hit, the higher the reward (but worse than wait)    |
+| reward for waiting | $1 / (10 * max(10, ticks\_since\_last\_shot))$ | Little reward for waiting, but punish for waiting too long         |
 
 ---
 
