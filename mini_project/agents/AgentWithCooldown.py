@@ -25,13 +25,6 @@ class AgentWithCooldown(Agent):
         self.epsilon = epsilon
         self.time_since_last_shot = 0
 
-    def _discretize_state(self, target_x: float) -> int:
-        """Discretize the x-position of the target into bins of N pixels."""
-        x_px = target_x * PPM
-        bin_size = 25
-        max_x = SCREEN_WIDTH
-        return int(min(x_px, max_x - 1) // bin_size)
-
     def update_knowledge(self, state, action, distance):
         if distance == 0:  # hit
             reward = 1
@@ -39,7 +32,7 @@ class AgentWithCooldown(Agent):
             reward = 1 / (100 + distance**2)
         else:
             # little reward for waiting - better than missing, but punish on waiting too long!
-            reward = 1 / (10 * max(self.time_since_last_shot, 10))
+            reward = 1 / (10 * max(self.time_since_last_shot, self.COOLDOWN))
         self.epsilon = max(self.EPSILON_MIN, self.epsilon * self.EPSILON_DECAY)
         self.q[state][action] += self.alpha * (reward - self.q[state][action])
 

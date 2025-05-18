@@ -7,7 +7,6 @@ import numpy as np
 
 from mini_project.agents.Agent import Agent
 from mini_project.Bullet import Bullet
-from mini_project.constants import SCREEN_WIDTH, PPM
 
 
 class BasicQLearningAgent(Agent):
@@ -20,13 +19,6 @@ class BasicQLearningAgent(Agent):
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
-
-    def _discretize_state(self, target_x: float) -> int:
-        """Discretize the x-position of the target into bins of N pixels."""
-        x_px = target_x * PPM
-        bin_size = 25
-        max_x = SCREEN_WIDTH
-        return int(min(x_px, max_x - 1) // bin_size)
 
     def update_knowledge(self, state, action, distance):
         reward = 1 / (1 + distance**2)

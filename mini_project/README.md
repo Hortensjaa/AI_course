@@ -68,16 +68,17 @@ $$
 
 ### 🧠 Q-Learning Parameters
 
-| Parameter          | Value                                          | Description                                                        |
-|--------------------|------------------------------------------------|--------------------------------------------------------------------|
-| α (alpha)          | 0.1                                            | Learning rate                                                      |
-| γ (gamma)          | 0.99                                           | Discount factor for future rewards                                 |
-| ε (epsilon)        | 1.0 → 0.001                                    | Exploration vs exploitation (decaying); smaller than for basic one |
-| ε decay            | 0.995                                          | Faster decay                   |
-| bin size           | 25 px                                          | State granularity (target X-position)                              |
-| reward on hit      | $1$                                            | Big reward for hit                                                 |
-| reward on miss     | $1 / (100 + d^2)$                              | The closer the hit, the higher the reward (but worse than wait)    |
-| reward for waiting | $1 / (10 * max(10, ticks\_since\_last\_shot))$ | Little reward for waiting, but punish for waiting too long         |
+| Parameter          | Value                                         | Description                                                        |
+|--------------------|-----------------------------------------------|--------------------------------------------------------------------|
+| α (alpha)          | 0.1                                           | Learning rate                                                      |
+| γ (gamma)          | 0.99                                          | Discount factor for future rewards                                 |
+| ε (epsilon)        | 1.0 → 0.001                                   | Exploration vs exploitation (decaying); smaller than for basic one |
+| ε decay            | 0.995                                         | Faster decay                                                       |
+| bin size           | 25 px                                         | State granularity (target X-position)                              |
+| reward on hit      | $1$                                           | Big reward for hit                                                 |
+| reward on miss     | $1 / (100 + d^2)$                             | The closer the hit, the higher the reward (but worse than wait)    |
+| reward for waiting | $1 / (10 * max(t, ticks\_since\_last\_shot))$ | Little reward for waiting, but punish for waiting too long         |
+| $t$                | $10$                                          | Cooldown value                                                     |
 
 ---
 
