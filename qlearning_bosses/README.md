@@ -104,14 +104,14 @@ where $s'$ is the next state (the state after the action was taken).
 
 ### 🧠 Q-Learning Parameters
 
-| Parameter          | Value           | Description                                |
-|--------------------|-----------------|--------------------------------------------|
-| α (alpha)          | 0.1             | Learning rate                              |
-| γ (gamma)          | 0.99            | Discount factor for future rewards         |
-| ε (epsilon)        | 1.0 → 0.02      | Exploration vs exploitation (decaying)     |
-| ε decay            | 0.9999          | Slower decay, because of the states number |
-| bin size           | 25 px           | State granularity (target X-position)      |
-| reward      | $1 / (1 + d^2)$ | The closer the hit, the higher the reward  |
+| Parameter          | Value                        | Description                                |
+|--------------------|------------------------------|--------------------------------------------|
+| α (alpha)          | 0.1                          | Learning rate                              |
+| γ (gamma)          | 0.99                         | Discount factor for future rewards         |
+| ε (epsilon)        | 1.0 → 0.02                   | Exploration vs exploitation (decaying)     |
+| ε decay            | 0.9999                       | Slower decay, because of the states number |
+| bin size           | 25 px                        | State granularity (target X-position)      |
+| reward      | $1 / (1 + d^2); +10 for hit$ | The closer the hit, the higher the reward  |
 
 > Target size for testing this agent is 50% bigger, but set of angles and number of bins are reduced to avoid too big Q-table.
 
