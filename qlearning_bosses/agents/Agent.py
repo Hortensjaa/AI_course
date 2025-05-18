@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from mini_project.constants import SCREEN_HEIGHT_METERS, PPM, SCREEN_WIDTH
-from mini_project.Bullet import Bullet
+from qlearning_bosses.constants import SCREEN_HEIGHT_METERS, PPM, SCREEN_WIDTH
+from qlearning_bosses.Bullet import Bullet
 
 
 class Agent(ABC):
@@ -24,5 +24,9 @@ class Agent(ABC):
         return int(min(x_px, max_x - 1) // bin_size)
 
     @abstractmethod
-    def create_bullet(self, state = None) -> Bullet:
+    def update_knowledge(self, state, action, distance, next_state):
+        pass
+
+    @abstractmethod
+    def create_bullet(self, target_x: float, target_dir: float) -> Bullet:
         pass

@@ -4,13 +4,16 @@ from typing import override
 
 import numpy as np
 
-
-from mini_project.agents.Agent import Agent
-from mini_project.Bullet import Bullet
-from mini_project.constants import SCREEN_WIDTH, PPM
+from qlearning_bosses.agents.Agent import Agent
+from qlearning_bosses.Bullet import Bullet
 
 
-class ConstrainedAngleAgent(Agent):
+"""
+Basic QLearning agent trying to aim to the target.
+It uses a simplified Q-learning algorithm to learn the best action to take in each state (discrete target position and direction).
+Gets a reward based on the distance to the target, with big advantage for hit.
+"""
+class BasicQLearningAgent(Agent):
     EPSILON_MIN = 0.01
     EPSILON_DECAY = 0.999
 
@@ -21,14 +24,15 @@ class ConstrainedAngleAgent(Agent):
         self.gamma = gamma
         self.epsilon = epsilon
 
-    def update_knowledge(self, state, action, distance):
+    @override
+    def update_knowledge(self, state, action, distance, next_state = None):
         reward = 1 / (1 + distance**2)
         self.epsilon = max(self.EPSILON_MIN, self.epsilon * self.EPSILON_DECAY)
         self.q[state][action] += self.alpha * (reward - self.q[state][action])
 
     @override
-    def create_bullet(self, state) -> Bullet:
-        discrete_state = self._discretize_state(state[0]), state[1]
+    def create_bullet(self, target_x: float, target_dir: float) -> Bullet:
+        discrete_state = self._discretize_state(target_x), target_dir
         if random() < self.epsilon:
             action_index = randint(0, self.N_ACTIONS - 1)
         else:

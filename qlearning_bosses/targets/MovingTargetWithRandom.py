@@ -1,8 +1,8 @@
 from random import random
 
 from Box2D import b2Vec2
-from mini_project.constants import PPM
-from mini_project.targets.Target import Target
+from qlearning_bosses.constants import PPM
+from qlearning_bosses.targets.Target import Target
 
 
 class MovingTargetWithRandom(Target):

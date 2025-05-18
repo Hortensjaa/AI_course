@@ -1,20 +1,23 @@
 from collections import defaultdict
-from datetime import time
 from random import random, randint
 from typing import override, Optional
 
 import numpy as np
 
 
-from mini_project.agents.Agent import Agent
-from mini_project.Bullet import Bullet
-from mini_project.constants import SCREEN_WIDTH, PPM
+from qlearning_bosses.agents.Agent import Agent
+from qlearning_bosses.Bullet import Bullet
 
 
+"""
+Agent with cooldown - needs 10 ticks to cooldown after shooting.
+Reward depends on distance to target (similar to the other agents) but also gives small reward for waiting,
+but starts to punish if waiting too long.
+"""
 class AgentWithCooldown(Agent):
     EPSILON_MIN = 0.001
     EPSILON_DECAY = 0.995
-    COOLDOWN = 10  # number of cooldown in ticks
+    COOLDOWN = 10  # time of cooldown in ticks
 
     def __init__(self, world, alpha=0.1, gamma=0.99, epsilon=1):
         super().__init__(world)
@@ -25,11 +28,12 @@ class AgentWithCooldown(Agent):
         self.epsilon = epsilon
         self.time_since_last_shot = 0
 
-    def update_knowledge(self, state, action, distance):
+    @override
+    def update_knowledge(self, state, action, distance, next_state = None):
         if distance == 0:  # hit
             reward = 1
         elif distance > 0:  # miss
-            reward = 1 / (100 + distance**2)
+            reward = 1 / (100 + 10 * distance**2)
         else:
             # little reward for waiting - better than missing, but punish on waiting too long!
             reward = 1 / (10 * max(self.time_since_last_shot, self.COOLDOWN))
@@ -37,9 +41,9 @@ class AgentWithCooldown(Agent):
         self.q[state][action] += self.alpha * (reward - self.q[state][action])
 
     @override
-    def create_bullet(self, state) -> Optional[Bullet]:
+    def create_bullet(self, target_x: float, target_dir: float) -> Optional[Bullet]:
         self.time_since_last_shot += 1
-        discrete_state = self._discretize_state(state[0]), state[1]
+        discrete_state = self._discretize_state(target_x), target_dir
 
         if self.time_since_last_shot < self.COOLDOWN:
             self.update_knowledge(discrete_state, self.WAIT_ACTION_INDEX, -1)

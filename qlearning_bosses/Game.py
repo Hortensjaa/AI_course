@@ -2,31 +2,27 @@ from time import time
 
 import pygame
 from Box2D import b2World
-from Bullet import Bullet
-from constants import SCREEN_HEIGHT, PPM, SCREEN_WIDTH, TARGET_FPS, TIME_STEP, GRAVITY
-from mini_project.agents.AgentWithCooldown import AgentWithCooldown
-from mini_project.targets.MovingTarget import MovingTarget
-from Timer import Timer
-from mini_project.agents.BasicQLearningAgent import BasicQLearningAgent
+
+from qlearning_bosses.Bullet import Bullet
+from qlearning_bosses.Timer import Timer
+from qlearning_bosses.constants import GRAVITY, SCREEN_HEIGHT, SCREEN_WIDTH, TARGET_FPS, TIME_STEP
 
 class Game:
     COUNTER_RESET_INTERVAL = 10
     SHOT_COOLDOWN = 0.01
 
-    def __init__(self):
+    def __init__(self, agent_cls, target_cls):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.running = True
 
         self.world = b2World(gravity=(0, GRAVITY), doSleep=True)
-        self.agent = AgentWithCooldown(self.world)
-        # self.agent = BasicQLearningAgent(self.world)
-        self.target = MovingTarget(self.world, SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.agent = agent_cls(self.world)
+        self.target = target_cls(self.world, SCREEN_WIDTH, SCREEN_HEIGHT)
         self.bullets: list[Bullet] = []
 
         self.history = []
-
         self.shot_timer = Timer(self.SHOT_COOLDOWN)
         self.reset_timer = Timer(self.COUNTER_RESET_INTERVAL)
 
@@ -35,12 +31,14 @@ class Game:
 
         self.button_rect = pygame.Rect(SCREEN_WIDTH - 120, 10, 110, 40)
 
-    def run(self):
+    def run(self, sim_time: int = 100):
         while self.running:
             self._handle_events()
             self._update()
             self._draw()
             self.clock.tick(TARGET_FPS)
+            if len(self.history) == sim_time:
+                break
         self._print_history()
         pygame.quit()
 
@@ -57,7 +55,7 @@ class Game:
         self.target.update()
 
         if self.shot_timer.ready():
-            bullet = self.agent.create_bullet((self.target.body.position.x, self.target.direction))
+            bullet = self.agent.create_bullet(self.target.body.position.x, self.target.direction)
             if bullet is not None:
                 self.bullets.append(bullet)
             self.shot_timer.reset()
@@ -72,12 +70,13 @@ class Game:
             if self.target.are_colliding(bullet):
                 self._destroy_bullet(bullet)
                 self.success_counter += 1
-                self.agent.update_knowledge(bullet.state, bullet.action, 0)
+                self.agent.update_knowledge(bullet.state, bullet.action, 0, (target_x, self.target.direction))
             elif bullet_y < 0:
                 len(self.bullets)
                 self._destroy_bullet(bullet)
                 self.miss_counter += 1
-                self.agent.update_knowledge(bullet.state, bullet.action, abs(target_x - bullet_x))
+                self.agent.update_knowledge(bullet.state, bullet.action, abs(target_x - bullet_x),
+                                            (target_x, self.target.direction))
 
         if self.reset_timer.ready():
             self.history.append((self.success_counter, self.miss_counter))
@@ -140,6 +139,3 @@ class Game:
         print(f"Hits: {all_hits}, Misses: {all_misses}, Success rate: {success_rate:.1f}%")
         print("===============")
         print()
-
-if __name__ == "__main__":
-    Game().run()
