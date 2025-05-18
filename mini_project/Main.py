@@ -4,6 +4,7 @@ import pygame
 from Box2D import b2World
 from Bullet import Bullet
 from constants import SCREEN_HEIGHT, PPM, SCREEN_WIDTH, TARGET_FPS, TIME_STEP, GRAVITY
+from mini_project.agents.AgentWithCooldown import AgentWithCooldown
 from mini_project.targets.MovingTarget import MovingTarget
 from Timer import Timer
 from mini_project.agents.BasicQLearningAgent import BasicQLearningAgent
@@ -19,7 +20,8 @@ class Game:
         self.running = True
 
         self.world = b2World(gravity=(0, GRAVITY), doSleep=True)
-        self.agent = BasicQLearningAgent(self.world)
+        self.agent = AgentWithCooldown(self.world)
+        # self.agent = BasicQLearningAgent(self.world)
         self.target = MovingTarget(self.world, SCREEN_WIDTH, SCREEN_HEIGHT)
         self.bullets: list[Bullet] = []
 
@@ -56,7 +58,8 @@ class Game:
 
         if self.shot_timer.ready():
             bullet = self.agent.create_bullet((self.target.body.position.x, self.target.direction))
-            self.bullets.append(bullet)
+            if bullet is not None:
+                self.bullets.append(bullet)
             self.shot_timer.reset()
 
         self.world.Step(TIME_STEP, 6, 2)
@@ -70,7 +73,8 @@ class Game:
                 self._destroy_bullet(bullet)
                 self.success_counter += 1
                 self.agent.update_knowledge(bullet.state, bullet.action, 0)
-            elif bullet_x * PPM < 0 or bullet_x * PPM > SCREEN_WIDTH:
+            elif bullet_y < 0:
+                len(self.bullets)
                 self._destroy_bullet(bullet)
                 self.miss_counter += 1
                 self.agent.update_knowledge(bullet.state, bullet.action, abs(target_x - bullet_x))
