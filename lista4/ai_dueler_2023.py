@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 '''
+THIS IS NOT MY CODE!
+CODE IS TAKEN FROM MY TEACHER TO TEST GAME AGENTS ON LISTA4
+
 Prosta sprawdzarka turniejowa.
 source .venv/bin/activate
 python3 ai_dueler_2023.py --verbose 0 reversi reversi/iago.sh reversi/solution.sh
