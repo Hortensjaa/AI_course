@@ -5,7 +5,7 @@ from typing import override
 import numpy as np
 
 from qlearning_bosses.agents.Agent import Agent
-from qlearning_bosses.Bullet import Bullet
+from qlearning_bosses.common.Bullet import Bullet
 
 
 """
@@ -17,16 +17,18 @@ class BasicQLearningAgent(Agent):
     EPSILON_MIN = 0.01
     EPSILON_DECAY = 0.999
 
-    def __init__(self, world, alpha=0.1, gamma=0.99, epsilon=1):
+    def __init__(self, world, alpha=0.1, epsilon=1):
         super().__init__(world)
         self.q = defaultdict(lambda: np.zeros(self.N_ACTIONS))
         self.alpha = alpha
-        self.gamma = gamma
         self.epsilon = epsilon
 
     @override
     def update_knowledge(self, state, action, distance, next_state = None):
-        reward = 1 / (1 + distance**2)
+        if distance > 0:
+            reward = 1 / (10 + distance**2)
+        else:
+            reward = 1
         self.epsilon = max(self.EPSILON_MIN, self.epsilon * self.EPSILON_DECAY)
         self.q[state][action] += self.alpha * (reward - self.q[state][action])
 

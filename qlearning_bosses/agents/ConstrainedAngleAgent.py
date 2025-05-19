@@ -5,7 +5,7 @@ from typing import override
 import numpy as np
 
 from qlearning_bosses.agents.Agent import Agent
-from qlearning_bosses.Bullet import Bullet
+from qlearning_bosses.common.Bullet import Bullet
 
 
 """
@@ -35,12 +35,14 @@ class ConstrainedAngleAgent(Agent):
             next_state[1],
             self.last_action_index
         )
-        reward = 1 / (1 + distance ** 2)
+        if distance > 0:
+            reward = 1 / (1 + distance ** 2)
+        else:
+            reward = 1
         self.epsilon = max(self.EPSILON_MIN, self.epsilon * self.EPSILON_DECAY)
         best_next_q = np.max(self.q[discrete_next_state])
         self.q[prev_state][action] += self.alpha * (reward + self.gamma * best_next_q - self.q[prev_state][action])
 
-    @override
     @override
     def create_bullet(self, target_x: float, target_dir: float) -> Bullet:
         current_discrete_state = (

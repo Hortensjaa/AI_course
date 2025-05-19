@@ -2,8 +2,8 @@ from typing import override, Tuple
 
 import pygame
 from Box2D import b2World, b2Vec2
-from qlearning_bosses.Collidable import Collidable
-from qlearning_bosses.constants import PPM, SCREEN_HEIGHT
+from qlearning_bosses.common.Collidable import Collidable
+from qlearning_bosses.common.constants import PPM, SCREEN_HEIGHT
 
 class Target(Collidable):
     def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=500):

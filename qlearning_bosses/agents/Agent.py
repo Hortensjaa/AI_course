@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from qlearning_bosses.constants import SCREEN_HEIGHT_METERS, PPM, SCREEN_WIDTH
-from qlearning_bosses.Bullet import Bullet
+from qlearning_bosses.common.constants import SCREEN_HEIGHT_METERS, PPM, SCREEN_WIDTH
+from qlearning_bosses.common.Bullet import Bullet
 
 
 class Agent(ABC):

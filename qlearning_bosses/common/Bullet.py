@@ -3,8 +3,8 @@ import pygame
 from Box2D import b2World, b2Vec2
 from typing import override, Tuple
 
-from qlearning_bosses.Collidable import Collidable
-from qlearning_bosses.constants import PPM, SCREEN_HEIGHT, SCREEN_HEIGHT_METERS
+from qlearning_bosses.common.Collidable import Collidable
+from qlearning_bosses.common.constants import PPM, SCREEN_HEIGHT, SCREEN_HEIGHT_METERS
 
 
 class Bullet(Collidable):

@@ -1,7 +1,7 @@
 from random import random
 
 from Box2D import b2Vec2
-from qlearning_bosses.constants import PPM
+from qlearning_bosses.common.constants import PPM
 from qlearning_bosses.targets.Target import Target
 
 

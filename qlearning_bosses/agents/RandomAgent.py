@@ -1,7 +1,7 @@
 from random import choice
 from typing import override
 
-from qlearning_bosses.Bullet import Bullet
+from qlearning_bosses.common.Bullet import Bullet
 from qlearning_bosses.agents.Agent import Agent
 
 

@@ -3,9 +3,9 @@ from time import time
 import pygame
 from Box2D import b2World
 
-from qlearning_bosses.Bullet import Bullet
-from qlearning_bosses.Timer import Timer
-from qlearning_bosses.constants import GRAVITY, SCREEN_HEIGHT, SCREEN_WIDTH, TARGET_FPS, TIME_STEP
+from qlearning_bosses.common.Bullet import Bullet
+from qlearning_bosses.common.Timer import Timer
+from qlearning_bosses.common.constants import GRAVITY, SCREEN_HEIGHT, SCREEN_WIDTH, TARGET_FPS, TIME_STEP
 
 class Game:
     COUNTER_RESET_INTERVAL = 10

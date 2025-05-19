@@ -52,14 +52,14 @@ where:
 
 ### 🧠 Q-Learning Parameters
 
-| Parameter   | Value          | Description                               |
-|-------------|----------------|-------------------------------------------|
-| α (alpha)   | 0.1            | Learning rate                             |
-| γ (gamma)   | 0.99           | Discount factor for future rewards        |
-| ε (epsilon) | 1.0 → 0.01     | Exploration vs exploitation (decaying)    |
-| ε decay     | 0.999          | Slow decay                                |
-| bin size    | 25 px          | State granularity (target X-position)     |
-| reward      | $1 / (1 + d^2)$ | The closer the hit, the higher the reward |
+| Parameter       | Value           | Description                               |
+|-----------------|-----------------|-------------------------------------------|
+| α (alpha)       | 0.1             | Learning rate                             |
+| ε (epsilon)     | 1.0 → 0.01      | Exploration vs exploitation (decaying)    |
+| ε decay         | 0.999           | Slow decay                                |
+| bin size        | 25 px           | State granularity (target X-position)     |
+| reward on hit      | $1$                                         | Big reward for hit                                                 |
+| reward on miss     | $1 / (10 + d^2)$                            | The closer the hit, the higher the reward (but worse than wait)    |
 
 ---
 
@@ -68,25 +68,22 @@ where:
 ### 🔁 Q-Update Scheme:
 > This version also uses simplified approach - agent has state now, but it doesn't matter in formula (I guess).
 
-$$
-Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} - Q[s][a])
-$$
+$$Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} - Q[s][a])$$
 
 ---
 
 ### 🧠 Q-Learning Parameters
 
-| Parameter          | Value                                         | Description                                                        |
-|--------------------|-----------------------------------------------|--------------------------------------------------------------------|
-| α (alpha)          | 0.1                                           | Learning rate                                                      |
-| γ (gamma)          | 0.99                                          | Discount factor for future rewards                                 |
-| ε (epsilon)        | 1.0 → 0.001                                   | Exploration vs exploitation (decaying); smaller than for basic one |
-| ε decay            | 0.995                                         | Faster decay                                                       |
-| bin size           | 25 px                                         | State granularity (target X-position)                              |
-| reward on hit      | $1$                                           | Big reward for hit                                                 |
-| reward on miss     | $1 / (100 + d^2)$                             | The closer the hit, the higher the reward (but worse than wait)    |
-| reward for waiting | $1 / (10 * max(t, ticks\_since\_last\_shot))$ | Little reward for waiting, but punish for waiting too long         |
-| $t$                | $10$                                          | Cooldown value                                                     |
+| Parameter          | Value                                            | Description                                                        |
+|--------------------|--------------------------------------------------|--------------------------------------------------------------------|
+| α (alpha)          | 0.1                                              | Learning rate                                                      |
+| ε (epsilon)        | 1.0 → 0.001                                      | Exploration vs exploitation (decaying); smaller than for basic one |
+| ε decay            | 0.995                                            | Faster decay                                                       |
+| bin size           | 25 px                                            | State granularity (target X-position)                              |
+| reward on hit      | $1$                                              | Big reward for hit                                                 |
+| reward on miss     | $1 / (100 + d^2)$                                | The closer the hit, the higher the reward (but worse than wait)    |
+| reward for waiting | $1 / (10 * max(t, ticks\\_since\\_last\\_shot))$ | Little reward for waiting, but punish for waiting too long         |
+| $t$                | $10$                                             | Cooldown value                                                     |
 
 ---
 
@@ -96,22 +93,22 @@ that are adjacent to the last selected angle ($±(120/n)°$).
 - Because of that, the last selected angle is stored in the state.
 ### 🔁 Q-Update Scheme:
 
-$$
-Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} + max(Q[s']) - Q[s][a])
-$$
+$$Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} + γ \cdot max(Q[s']) - Q[s][a])$$
 where $s'$ is the next state (the state after the action was taken).
 ---
 
 ### 🧠 Q-Learning Parameters
 
-| Parameter          | Value                        | Description                                |
-|--------------------|------------------------------|--------------------------------------------|
-| α (alpha)          | 0.1                          | Learning rate                              |
-| γ (gamma)          | 0.99                         | Discount factor for future rewards         |
-| ε (epsilon)        | 1.0 → 0.02                   | Exploration vs exploitation (decaying)     |
-| ε decay            | 0.9999                       | Slower decay, because of the states number |
-| bin size           | 25 px                        | State granularity (target X-position)      |
-| reward      | $1 / (1 + d^2); +10 for hit$ | The closer the hit, the higher the reward  |
+| Parameter          | Value           | Description                                            |
+|--------------------|-----------------|--------------------------------------------------------|
+| α (alpha)          | 0.1             | Learning rate                                          |
+| γ (gamma)          | 0.99            | Discount factor for future rewards                     |
+| ε (epsilon)        | 1.0 → 0.02      | Exploration vs exploitation (decaying)                 |
+| ε decay            | 0.9999          | Slower decay, because of the states number             |
+| bin size           | 40 px           | State granularity - bigger bins to avoid very large sample space |
+| reward on hit      | $1$                                        | Big reward for hit                                     |
+| reward on miss     | $1 / (1 + d^2)$                            | The closer the hit, the higher the reward              |
+
 
 > Target size for testing this agent is 50% bigger, but set of angles and number of bins are reduced to avoid too big Q-table.
 
@@ -132,40 +129,72 @@ where $s'$ is the next state (the state after the action was taken).
 ## 📊 Results
 All agents were tested with moving targets. The "pass" is the hit rate >= 90%.
 
+### Random Agent
+```
+1. Hits: 92, Misses: 503, Success rate: 15.5%
+2. Hits: 109, Misses: 544, Success rate: 16.7%
+3. Hits: 118, Misses: 495, Success rate: 19.2%
+4. Hits: 98, Misses: 536, Success rate: 15.5%
+5. Hits: 124, Misses: 465, Success rate: 21.1%
+-----Total-----
+Hits: 541, Misses: 2543, Success rate: 17.5%
+
+```
+
 ### Basic QLearning Agent
 ```
-1. Hits: 176, Misses: 437, Success rate: 28.7%
-2. Hits: 281, Misses: 215, Success rate: 56.7%
-3. Hits: 467, Misses: 170, Success rate: 73.3%
-4. Hits: 517, Misses: 146, Success rate: 78.0%
-5. Hits: 433, Misses: 67, Success rate: 86.6%
-6. Hits: 562, Misses: 63, Success rate: 89.9%
-7. Hits: 588, Misses: 68, Success rate: 89.6%
-8. Hits: 598, Misses: 60, Success rate: 90.9% <- PASSED
-9. Hits: 437, Misses: 43, Success rate: 91.0% <- PASSED
-10. Hits: 579, Misses: 55, Success rate: 91.3% <- PASSED
-11. Hits: 607, Misses: 58, Success rate: 91.3% <- PASSED
-12. Hits: 443, Misses: 43, Success rate: 91.2% <- PASSED
-13. Hits: 575, Misses: 56, Success rate: 91.1% <- PASSED
-14. Hits: 596, Misses: 59, Success rate: 91.0% <- PASSED
-15. Hits: 601, Misses: 57, Success rate: 91.3% <- PASSED
-16. Hits: 422, Misses: 38, Success rate: 91.7% <- PASSED
-17. Hits: 598, Misses: 59, Success rate: 91.0% <- PASSED
-18. Hits: 595, Misses: 64, Success rate: 90.3% <- PASSED
-19. Hits: 429, Misses: 44, Success rate: 90.7% <- PASSED
-20. Hits: 586, Misses: 54, Success rate: 91.6% <- PASSED
-21. Hits: 600, Misses: 61, Success rate: 90.8% <- PASSED
-22. Hits: 588, Misses: 57, Success rate: 91.2% <- PASSED
-23. Hits: 436, Misses: 38, Success rate: 92.0% <- PASSED
-24. Hits: 597, Misses: 59, Success rate: 91.0% <- PASSED
-25. Hits: 587, Misses: 64, Success rate: 90.2% <- PASSED
-26. Hits: 427, Misses: 39, Success rate: 91.6% <- PASSED
-27. Hits: 599, Misses: 61, Success rate: 90.8% <- PASSED
-28. Hits: 596, Misses: 61, Success rate: 90.7% <- PASSED
-29. Hits: 572, Misses: 53, Success rate: 91.5% <- PASSED
-30. Hits: 579, Misses: 57, Success rate: 91.0% <- PASSED
+1. Hits: 160, Misses: 458, Success rate: 25.9%
+2. Hits: 363, Misses: 291, Success rate: 55.5%
+3. Hits: 333, Misses: 129, Success rate: 72.1%
+4. Hits: 499, Misses: 142, Success rate: 77.8%
+5. Hits: 559, Misses: 91, Success rate: 86.0%
+6. Hits: 567, Misses: 73, Success rate: 88.6%
+7. Hits: 428, Misses: 52, Success rate: 89.2%
+8. Hits: 576, Misses: 60, Success rate: 90.6% <- PASSED
+9. Hits: 569, Misses: 62, Success rate: 90.2% <- PASSED
+10. Hits: 425, Misses: 52, Success rate: 89.1%
+11. Hits: 567, Misses: 56, Success rate: 91.0% <- PASSED
+12. Hits: 599, Misses: 68, Success rate: 89.8%
+13. Hits: 603, Misses: 65, Success rate: 90.3% <- PASSED
+14. Hits: 382, Misses: 43, Success rate: 89.9%
+15. Hits: 595, Misses: 64, Success rate: 90.3% <- PASSED
+16. Hits: 565, Misses: 65, Success rate: 89.7%
+17. Hits: 477, Misses: 49, Success rate: 90.7% <- PASSED
+18. Hits: 579, Misses: 57, Success rate: 91.0% <- PASSED
+19. Hits: 599, Misses: 68, Success rate: 89.8%
+20. Hits: 588, Misses: 64, Success rate: 90.2% <- PASSED
+21. Hits: 410, Misses: 41, Success rate: 90.9% <- PASSED
+22. Hits: 601, Misses: 65, Success rate: 90.2% <- PASSED
+23. Hits: 591, Misses: 66, Success rate: 90.0%
+24. Hits: 399, Misses: 41, Success rate: 90.7% <- PASSED
+25. Hits: 601, Misses: 63, Success rate: 90.5% <- PASSED
+26. Hits: 594, Misses: 61, Success rate: 90.7% <- PASSED
+27. Hits: 570, Misses: 60, Success rate: 90.5% <- PASSED
+28. Hits: 431, Misses: 45, Success rate: 90.5% <- PASSED
+29. Hits: 584, Misses: 65, Success rate: 90.0%
+30. Hits: 576, Misses: 64, Success rate: 90.0%
+31. Hits: 429, Misses: 45, Success rate: 90.5% <- PASSED
+32. Hits: 562, Misses: 64, Success rate: 89.8%
+33. Hits: 575, Misses: 59, Success rate: 90.7% <- PASSED
+34. Hits: 599, Misses: 62, Success rate: 90.6% <- PASSED
+35. Hits: 448, Misses: 52, Success rate: 89.6%
+36. Hits: 576, Misses: 61, Success rate: 90.4% <- PASSED
+37. Hits: 583, Misses: 58, Success rate: 91.0% <- PASSED
+38. Hits: 453, Misses: 49, Success rate: 90.2% <- PASSED
+39. Hits: 564, Misses: 65, Success rate: 89.7%
+40. Hits: 578, Misses: 58, Success rate: 90.9% <- PASSED
+41. Hits: 601, Misses: 66, Success rate: 90.1% <- PASSED
+42. Hits: 426, Misses: 44, Success rate: 90.6% <- PASSED
+43. Hits: 581, Misses: 58, Success rate: 90.9% <- PASSED
+44. Hits: 600, Misses: 62, Success rate: 90.6% <- PASSED
+45. Hits: 426, Misses: 51, Success rate: 89.3%
+46. Hits: 575, Misses: 55, Success rate: 91.3% <- PASSED
+47. Hits: 599, Misses: 64, Success rate: 90.3% <- PASSED
+48. Hits: 574, Misses: 56, Success rate: 91.1% <- PASSED
+49. Hits: 578, Misses: 44, Success rate: 92.9% <- PASSED
+50. Hits: 605, Misses: 53, Success rate: 91.9% <- PASSED
 -----Total-----
-Hits: 15671, Misses: 2406, Success rate: 86.7%
+Hits: 26322, Misses: 3706, Success rate: 87.7%
 ```
 ### QLearning Agent With Cooldown
 This agent can easily learn to hit the target, because of the option to pass.

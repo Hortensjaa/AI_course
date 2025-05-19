@@ -6,7 +6,7 @@ import numpy as np
 
 
 from qlearning_bosses.agents.Agent import Agent
-from qlearning_bosses.Bullet import Bullet
+from qlearning_bosses.common.Bullet import Bullet
 
 
 """
@@ -19,12 +19,11 @@ class AgentWithCooldown(Agent):
     EPSILON_DECAY = 0.995
     COOLDOWN = 10  # time of cooldown in ticks
 
-    def __init__(self, world, alpha=0.1, gamma=0.99, epsilon=1):
+    def __init__(self, world, alpha=0.1, epsilon=1):
         super().__init__(world)
         self.WAIT_ACTION_INDEX = self.N_ACTIONS
         self.q = defaultdict(lambda: np.zeros(self.N_ACTIONS + 1))
         self.alpha = alpha
-        self.gamma = gamma
         self.epsilon = epsilon
         self.time_since_last_shot = 0
 

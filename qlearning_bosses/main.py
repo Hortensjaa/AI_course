@@ -4,6 +4,7 @@ from qlearning_bosses.Game import Game
 from qlearning_bosses.agents.AgentWithCooldown import AgentWithCooldown
 from qlearning_bosses.agents.BasicQLearningAgent import BasicQLearningAgent
 from qlearning_bosses.agents.ConstrainedAngleAgent import ConstrainedAngleAgent
+from qlearning_bosses.agents.RandomAgent import RandomAgent
 from qlearning_bosses.targets.MovingTarget import MovingTarget
 from qlearning_bosses.targets.MovingTargetWithRandom import MovingTargetWithRandom
 from qlearning_bosses.targets.StaticTarget import StaticTarget
@@ -12,6 +13,7 @@ AGENT_CLASSES = {
     "cooldown": AgentWithCooldown,
     "basic": BasicQLearningAgent,
     "constrained": ConstrainedAngleAgent,
+    "random": RandomAgent,
 }
 
 TARGET_CLASSES = {
