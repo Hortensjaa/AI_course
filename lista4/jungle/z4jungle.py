@@ -1,15 +1,13 @@
 from typing import override
 
 from my_jungle import Jungle
-from copy import copy, deepcopy
-import random
+from copy import deepcopy
 import sys
 from time import time
 
 """
 W tym zadaniu zaimplementuję alpha-beta search
 """
-
 
 
 class Jungle4(Jungle):
@@ -172,7 +170,7 @@ class Jungle4(Jungle):
                     break
             return value
 
-    def alpha_beta_search(self, player, max_depth=4, time_limit=3):
+    def alpha_beta_search(self, player, max_depth=5, time_limit=3):
         self.start_time = time()
         self.time_limit = time_limit
         self.search_interrupted = False

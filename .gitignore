@@ -2,3 +2,9 @@
 /.venv
 /.idea
 *.sh
+/lista4/jungle/baloo.py
+/lista4/jungle/jungle_random.py
+/lista4/chess/
+/lista4/reversi/cassio.py
+/lista4/reversi/desdemona.py
+/lista4/reversi/duke_of_venice.py

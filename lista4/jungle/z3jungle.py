@@ -35,12 +35,15 @@ class Jungle3(Jungle):
             player = 1 - player
             depth += 1
 
-    def choose_mc_move(self, player, sims_budget=50):
+    def choose_mc_move(self, player, sims_budget=20_000):
         moves = self.generate_all_moves(player)
         if not moves:
-            return None
+            return None, 0
 
-        sims_per_move = max(1, sims_budget // len(moves))
+        # na początku (gdy budżet jest duży) oszczędzam ruchy, bo początek gry "nie jest aż taki ważny"
+        # w miarę upływu czasu budżet się zmniejsza i ruchy są coraz bardziej istotne
+        sims_per_move = min(max(5, 30 - int(0.001 * sims_budget)), 25)
+        # print(sims_per_move, file=sys.stderr)
         best = None
         best_score = -1.0
 
@@ -59,7 +62,7 @@ class Jungle3(Jungle):
                 best_score = avg
                 best = mv
 
-        return best
+        return best, len(moves) * sims_per_move
 
 
 
@@ -83,6 +86,7 @@ class Player(object):
         return line[0], line[1:]
 
     def loop(self):
+        budget = 20_000
         while True:
             cmd, args = self.hear()
             if cmd == 'HEDID':
@@ -91,16 +95,21 @@ class Player(object):
                 xs, ys, xd, yd = move
                 self.game.do_move((xs, ys), (xd, yd), 1-self.my_player)
             elif cmd == 'ONEMORE':
+                print(budget, file=sys.stderr)
                 self.reset()
+                budget = 20_000
                 continue
             elif cmd == 'BYE':
+                print(budget, file=sys.stderr)
                 break
             else:
                 assert cmd == 'UGO'
-                # assert not self.game.move_list
+                budget = 20_000
                 self.my_player = 0
 
-            mv = self.game.choose_mc_move(self.my_player)
+            mv, n = self.game.choose_mc_move(self.my_player, budget)
+            budget -= n
+            # print(n, " - ", budget, file=sys.stderr)
             if mv is None:
                 # brak ruchów
                 self.say('IDO -1 -1 -1 -1')
@@ -108,6 +117,11 @@ class Player(object):
                 (xs, ys), (xd, yd) = mv
                 self.game.do_move((xs, ys), (xd, yd), self.my_player)
                 self.say(f'IDO {xs} {ys} {xd} {yd}')
+
+    # while budget > 0:
+    #     for move in moves:
+    #         cost = run(move)
+    #         budget -= cost
 
 
 if __name__ == '__main__':
