@@ -41,11 +41,10 @@ mini_project/
 ### 🔁 Q-Update Scheme:
 > This version uses a simplified approach – the agent is stateless and always has access to the same set of actions.
 
-$$
-Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} - Q[s][a])
-$$
+$$Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} - Q[s][a])$$
+
 where:
-- s - state in witch we selected the action
+- s - state in which we selected the action
 - a - action
 
 ---
@@ -64,7 +63,8 @@ where:
 ---
 
 ## QLearning Agent With Cooldown
-- Similar to basic Q-learning agent, but with an additional constraint: the agent can only shoot every $t$ ticks of waiting.
+- Similar to basic Q-learning agent, but with an additional constraint: the agent can only shoot after $t$ ticks of waiting.
+- On shot, timer is set to 0
 ### 🔁 Q-Update Scheme:
 > This version also uses simplified approach - agent has state now, but it doesn't matter in formula (I guess).
 
@@ -90,10 +90,11 @@ $$Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} - Q[s][a])$$
 ## QLearning Agent With Angle Constraint
 - Similar to basic Q-learning agent, but with an additional constraint: the agent can only choose from angles,
 that are adjacent to the last selected angle ($±(120/n)°$).
-- Because of that, the last selected angle is stored in the state.
+- Because of that, the last selected angle is stored in the state => much bigger sample space.
 ### 🔁 Q-Update Scheme:
 
 $$Q[s][a] = Q[s][a] + \alpha \cdot (\text{reward} + γ \cdot max(Q[s']) - Q[s][a])$$
+
 where $s'$ is the next state (the state after the action was taken).
 ---
 
@@ -103,14 +104,11 @@ where $s'$ is the next state (the state after the action was taken).
 |--------------------|-----------------|--------------------------------------------------------|
 | α (alpha)          | 0.1             | Learning rate                                          |
 | γ (gamma)          | 0.99            | Discount factor for future rewards                     |
-| ε (epsilon)        | 1.0 → 0.02      | Exploration vs exploitation (decaying)                 |
+| ε (epsilon)        | 1.0 → 0.01      | Exploration vs exploitation (decaying)                 |
 | ε decay            | 0.9999          | Slower decay, because of the states number             |
 | bin size           | 40 px           | State granularity - bigger bins to avoid very large sample space |
 | reward on hit      | $1$                                        | Big reward for hit                                     |
-| reward on miss     | $1 / (1 + d^2)$                            | The closer the hit, the higher the reward              |
-
-
-> Target size for testing this agent is 50% bigger, but set of angles and number of bins are reduced to avoid too big Q-table.
+| reward on miss     | $1 / (10 + d^2)$                            | The closer the hit, the higher the reward              |
 
 ---
 
@@ -121,9 +119,9 @@ where $s'$ is the next state (the state after the action was taken).
    pip install pygame numpy
    ```
 
-2. Run simulation:
+2. Run simulation - default arguments are `--agent basic --target moving --rounds 100`.
    ```bash
-    python3 -m qlearning_bosses.main --agent [basic|cooldown|constrained] --target [static|moving|random]
+    python3 -m qlearning_bosses.main --agent [random|basic|cooldown|constrained] --target [static|moving|random] --rounds [int]
     ```
    
 ## 📊 Results
@@ -197,11 +195,9 @@ Hits: 541, Misses: 2543, Success rate: 17.5%
 Hits: 26322, Misses: 3706, Success rate: 87.7%
 ```
 ### QLearning Agent With Cooldown
-This agent can easily learn to hit the target, because of the option to pass.
-However, in some cases it can be stuck in local maximum for long, 
-because of passing shot in uncertain states and then 
-taking action in even worse situation, because of punishment for waiting too long.
-On the other hand, it can also create the strategy of waiting a lot.
+- This agent can easily learn to almost never miss, because of the option to pass.
+- However, in some cases it can be stuck in local maximum for long, because of passing shot in uncertain states and then taking action in even worse situation, to avoid punishment for waiting too long.
+- On the other hand, it can also evolve the strategy of waiting a lot.
 ```
 === History - case 1 ===
 1. Hits: 12, Misses: 28, Success rate: 30.0%
@@ -270,7 +266,8 @@ Hits: 136, Misses: 48, Success rate: 73.9%
 ```
 
 ### QLearning Agent With Angle Constraint
-This agent needs more time to learn, because of more complex state.The learning curve makes it hard to go past 85%.
+This agent needs more time to learn, because of more complex state.
+> Target size for testing this agent was 50% bigger, but set of angles and number of bins were reduced to avoid too big Q-table.
 ```
 1. Hits: 167, Misses: 470, Success rate: 26.2% 
 2. Hits: 119, Misses: 480, Success rate: 19.9% 
