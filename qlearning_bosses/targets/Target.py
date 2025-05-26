@@ -2,18 +2,17 @@ from typing import override, Tuple
 
 import pygame
 from Box2D import b2World, b2Vec2
+
 from qlearning_bosses.common.Collidable import Collidable
-from qlearning_bosses.common.constants import PPM, SCREEN_HEIGHT
+from qlearning_bosses.common.constants import PPM, SCREEN_HEIGHT, SCREEN_WIDTH
 
 class Target(Collidable):
-    def __init__(self, world: b2World, wx_px: int, wy_px: int, width_px=100, height_px=10, speed_px=500):
-        self.wx = wx_px
-        self.wy = wy_px
+    def __init__(self, world: b2World, width_px=100, height_px=10, speed_px=500):
         self.width = width_px
         self.height = height_px
         self.speed = speed_px / PPM
 
-        init_x = (wx_px / 2) / PPM
+        init_x = (SCREEN_WIDTH / 2) / PPM
         init_y = (SCREEN_HEIGHT - height_px) / PPM
 
         self.body = world.CreateKinematicBody(
@@ -23,7 +22,7 @@ class Target(Collidable):
 
         self.direction = 1
 
-    def update(self):
+    def update(self, *args):
         pass
 
     @override

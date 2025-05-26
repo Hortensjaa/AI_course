@@ -9,21 +9,21 @@ from qlearning_bosses.common.constants import GRAVITY, SCREEN_HEIGHT, SCREEN_WID
 
 class Game:
     COUNTER_RESET_INTERVAL = 10
-    SHOT_COOLDOWN = 0.01
 
-    def __init__(self, agent_cls, target_cls):
+    def __init__(self, agent_cls, target_cls, cooldown = 0.01):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.running = True
+        self.shot_cooldown = cooldown
 
         self.world = b2World(gravity=(0, GRAVITY), doSleep=True)
         self.agent = agent_cls(self.world)
-        self.target = target_cls(self.world, SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.target = target_cls(self.world)
         self.bullets: list[Bullet] = []
 
         self.history = []
-        self.shot_timer = Timer(self.SHOT_COOLDOWN)
+        self.shot_timer = Timer(self.shot_cooldown)
         self.reset_timer = Timer(self.COUNTER_RESET_INTERVAL)
 
         self.success_counter = 0
@@ -52,7 +52,7 @@ class Game:
 
     def _update(self):
         self.screen.fill((0, 0, 0))
-        self.target.update()
+        self.target.update(self.bullets)
 
         if self.shot_timer.ready():
             bullet = self.agent.create_bullet(self.target.body.position.x, self.target.direction)
@@ -72,7 +72,6 @@ class Game:
                 self.success_counter += 1
                 self.agent.update_knowledge(bullet.state, bullet.action, 0, (target_x, self.target.direction))
             elif bullet_y < 0:
-                len(self.bullets)
                 self._destroy_bullet(bullet)
                 self.miss_counter += 1
                 self.agent.update_knowledge(bullet.state, bullet.action, abs(target_x - bullet_x),

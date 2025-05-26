@@ -25,6 +25,7 @@ mini_project/
 │ ├── StaticTarget.py # Not moving target
 │ ├── MovingTarget.py # Target moving steadily from wall to wall
 │ ├── MovingTargetWithRandom.py # Target with small probability of sudden direction change
+│ ├── NaiveMovingTarget.py # Target with naive heauristic - if closest bullet is a threat, change direction
 ├── Bullet.py # Bullet class with physics logic
 ├── Main.py # Main game loop and simulation controller
 ├── constants.py # Global constants (screen size, PPM, etc.)

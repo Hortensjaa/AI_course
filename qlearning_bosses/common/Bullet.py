@@ -12,6 +12,7 @@ class Bullet(Collidable):
                  state = None, action = None):
         self.body = world.CreateDynamicBody(position=(x, y), bullet=True)
         self.body.CreatePolygonFixture(box=(0.1, 0.1), density=1, friction=100)
+        self.color = (255, 0, 0)
 
         angle_rad = math.radians(angle_deg)
         vx = speed * math.cos(angle_rad)
@@ -34,4 +35,4 @@ class Bullet(Collidable):
     @override
     def draw(self, screen: pygame.display) -> None:
         x, y, w, h = self.get_position()
-        pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(x, y, w, h))
+        pygame.draw.rect(screen, self.color, pygame.Rect(x, y, w, h))

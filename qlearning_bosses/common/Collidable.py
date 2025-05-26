@@ -18,6 +18,13 @@ class Collidable(ABC):
     def draw(self, screen: pygame.display) -> None:
         pass
 
+    @staticmethod
+    def distance(b1: 'Collidable', b2: 'Collidable') -> float:
+        x1, y1, _, _ = b1.get_position()
+        x2, y2, _, _ = b2.get_position()
+
+        return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+
     def are_colliding(self, other: 'Collidable') -> bool:
         """
         Checks if this collidable object is colliding with another collidable object.
