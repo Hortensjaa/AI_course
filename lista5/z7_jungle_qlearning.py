@@ -435,5 +435,5 @@ if __name__ == "__main__":
 
     print("take a look at the weights: ", j.weights)
     print("all wins: ", wins)
-    print("lost parties: ", lost)
+    print("lost games: ", lost)
 

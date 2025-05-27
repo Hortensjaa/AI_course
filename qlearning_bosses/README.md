@@ -122,7 +122,7 @@ where $s'$ is the next state (the state after the action was taken).
 
 2. Run simulation - default arguments are `--agent basic --target moving --rounds 100`.
    ```bash
-    python3 -m qlearning_bosses.main --agent [random|basic|cooldown|constrained] --target [static|moving|random] --rounds [int]
+    python3 -m qlearning_bosses.main --agent [random|basic|cooldown|constrained] --target [static|moving|random|naive] --rounds [int] --cooldown [float]
     ```
    
 ## 📊 Results
